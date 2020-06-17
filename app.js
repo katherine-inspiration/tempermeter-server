@@ -22,10 +22,12 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 
 app.get('/api/history/results/:user_id', (req, res) => {
-  pgClient.getResults(req.params.user_id, res);
-
-
+  pgClient.sendResultsHistory(req.params.user_id, res);
 });
+
+app.get('/api/history/answers/:session_id', (req, res) => {
+  pgClient.sendAnswersHistory(req.params.session_id, res);
+})
 
 app.get('/api', (req, res) => {
   res.json({text: "Hello, api!"})
