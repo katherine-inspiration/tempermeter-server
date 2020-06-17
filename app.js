@@ -7,6 +7,7 @@ var logger = require('morgan');
 var pgClient = require('./postgreClient');
 
 var app = express();
+const router = express.Router();
 
 
 
@@ -19,6 +20,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
 
+
+app.get('/api/history/results/:user_id', (req, res) => {
+  pgClient.getResults(req.params.user_id, res);
+
+
+});
 
 app.get('/api', (req, res) => {
   res.json({text: "Hello, api!"})
