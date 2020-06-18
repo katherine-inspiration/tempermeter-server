@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 var pgClient = require('./postgreClient');
 
 var app = express();
@@ -43,7 +47,7 @@ app.get('/api/result_info/:result_id', (req, res) => {
 
 app.get('/api/session/:user_id', (req, res) => {
   pgClient.sendCurrentSessionId(req.params.user_id, res);
-})
+});
 
 app.get('/api/images/holeric', (req, res) => {
   res.sendFile(path.join(__dirname, 'images', 'holeric.PNG'));
@@ -59,6 +63,22 @@ app.get('/api/images/sangvinic', (req, res) => {
 
 app.get('/api/images/melanholic', (req, res) => {
   res.sendFile(path.join(__dirname, 'images', 'melanholic.PNG'));
+});
+
+app.put('/api/answer', (req, res) => {
+  pgClient.putAnswer(req.body, res);
+});
+
+app.get('/api/answer_ball/:answer_id', (req, res) => {
+  pgClient.sendAnswerBall(req.params.answer_id, res);
+});
+
+app.put('/api/result', (req, res) => {
+  pgClient.putResult(req.body, res);
+});
+
+app.get('/api/session/:session_id/finish', (req, res) => {
+  pgClient.finishSession(req.params.session_id, res);
 });
 
 app.get('/api', (req, res) => {
