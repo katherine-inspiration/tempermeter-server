@@ -54,7 +54,7 @@ app.get('/api/images/flegmatic', (req, res) => {
 });
 
 app.get('/api/images/sangvinic', (req, res) => {
-  res.sendFile(path.join(__dirname, 'images', 'sangvinic.png'));
+  res.sendFile('./images/sangvinic.png');
 });
 
 app.get('/api/images/melanholic', (req, res) => {
