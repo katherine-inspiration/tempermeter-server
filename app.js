@@ -46,7 +46,7 @@ app.get('/api/session/:user_id', (req, res) => {
 })
 
 app.get('/api/images/holeric', (req, res) => {
-  res.sendFile(path.join(__dirname, 'images', 'holeric.png'));
+  res.sendFile(path.join(__dirname, 'images', 'holeric.PNG'));
 });
 
 app.get('/api/images/flegmatic', (req, res) => {
@@ -54,11 +54,11 @@ app.get('/api/images/flegmatic', (req, res) => {
 });
 
 app.get('/api/images/sangvinic', (req, res) => {
-  res.sendFile('./images/sangvinic.png');
+  res.sendFile(path.join(__dirname, 'images', 'sangvinic.PNG'));
 });
 
 app.get('/api/images/melanholic', (req, res) => {
-  res.sendFile(path.join(__dirname, 'images', 'melanholic.png'));
+  res.sendFile(path.join(__dirname, 'images', 'melanholic.PNG'));
 });
 
 app.get('/api', (req, res) => {
