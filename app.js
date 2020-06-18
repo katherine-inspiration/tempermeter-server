@@ -27,7 +27,39 @@ app.get('/api/history/results/:user_id', (req, res) => {
 
 app.get('/api/history/answers/:session_id', (req, res) => {
   pgClient.sendAnswersHistory(req.params.session_id, res);
+});
+
+app.get('/api/questions', (req, res) => {
+  pgClient.sendQuestions(res);
+});
+
+app.get('/api/answers/:question_id', (req, res) => {
+  pgClient.sendAnswers(req.params.question_id, res);
+});
+
+app.get('/api/result_info/:result_id', (req, res) => {
+  pgClient.sendResultInfo(req.params.result_id, res);
+});
+
+app.get('/api/session/:user_id', (req, res) => {
+  pgClient.sendCurrentSessionId(req.params.user_id, res);
 })
+
+app.get('/api/images/holeric', (req, res) => {
+  res.sendFile(path.join(__dirname, 'images', 'holeric.png'));
+});
+
+app.get('/api/images/flegmatic', (req, res) => {
+  res.sendFile(path.join(__dirname, 'images', 'flegmatic.png'));
+});
+
+app.get('/api/images/sangvinic', (req, res) => {
+  res.sendFile(path.join(__dirname, 'images', 'sangvinic.png'));
+});
+
+app.get('/api/images/melanholic', (req, res) => {
+  res.sendFile(path.join(__dirname, 'images', 'melanholic.png'));
+});
 
 app.get('/api', (req, res) => {
   res.json({text: "Hello, api!"})
