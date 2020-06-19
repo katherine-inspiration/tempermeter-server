@@ -16,10 +16,10 @@ module.exports = {
         client.query("INSERT INTO started_sessions (user_id) VALUES ( '" + userId + "' );",
             (err, res) => {
                 if (err) {
-                    response.send("Couldn\'t start session");
+                    response.json({status:"Couldn\'t start session"});
                     throw err;
                 }
-                response.send("Session is started");
+                response.json({status:"Session is started"});
             }
         )
     },
@@ -28,10 +28,10 @@ module.exports = {
         client.query("DELETE FROM started_sessions WHERE session_id = " + sessionId + ";",
             (err, res) => {
                 if (err) {
-                    response.send("Couldn\'t finish session");
+                    response.json("Couldn\'t finish session");
                     throw err;
                 }
-                response.send("The session is finished");
+                response.json("The session is finished");
             }
         )
     },
@@ -91,9 +91,9 @@ module.exports = {
                     throw err;
                 }
                 if (res.rows) {
-                    res.json(res.rows);
+                    response.json(res.rows[0]);
                 } else {
-                    res.json({empty: true});
+                    response.json({empty: true});
                 }
             });
     },
