@@ -12,42 +12,52 @@ const client = new Client({
 client.connect();
 
 module.exports = {
-    finishSession(sessionId, response){
-        client.query("DELETE FROM started_sessions WHERE session_id = " + sessionId + ";",
+    startSession(userId, response) {
+        client.query("INSERT INTO started_sessions (user_id) VALUES ( '" + userId + "' );",
             (err, res) => {
-                if (err){
-                   response.json("Couldn\'t finish session");
-                   throw err;
+                if (err) {
+                    response.send("Couldn\'t start session");
+                    throw err;
                 }
-                response.json("The session is finished");
+                response.send("Session is started");
             }
-
         )
     },
 
-    sendAnswerBall(answerId, response){
-        client.query("SELECT answer_id, ball FROM answers WHERE answer_id = " + answerId + " ;",
+    finishSession(sessionId, response) {
+        client.query("DELETE FROM started_sessions WHERE session_id = " + sessionId + ";",
             (err, res) => {
-                if (err){
+                if (err) {
+                    response.send("Couldn\'t finish session");
                     throw err;
                 }
-                if (res.rows){
-                    response.json(res.rows[0]);
+                response.send("The session is finished");
+            }
+        )
+    },
+
+    sendAnswerBall(answerId, response) {
+        client.query("SELECT answer_id, ball FROM answers WHERE answer_id = " + answerId + " ;",
+            (err, res) => {
+                if (err) {
+                    throw err;
                 }
-                else{
-                    response.json( { empty: true } );
+                if (res.rows) {
+                    response.json(res.rows[0]);
+                } else {
+                    response.json({empty: true});
                 }
             }
         );
     },
 
-    putResult(result, response){
+    putResult(result, response) {
         console.log(result);
         client.query("INSERT INTO results_history (session_id, user_id, result_id, date) VALUES (" +
-                result.sessionId + ", " +
-                result.userId + ", " +
-                result.resultId + ", " +
-                result.date + " );",
+            result.sessionId + ", " +
+            result.userId + ", " +
+            result.resultId + ", " +
+            result.date + " );",
             (err, res) => {
                 if (err) {
                     response.json('Couldn\'t add result to database');
@@ -58,12 +68,12 @@ module.exports = {
         );
     },
 
-    putAnswer(answer, response){
+    putAnswer(answer, response) {
         console.log(answer);
         client.query("INSERT INTO answers_history (session_id, answer_id, question_id) VALUES " +
-                answer.sessionId + ", " +
-                answer.answerId + ", " +
-                answer.questionId + " );",
+            answer.sessionId + ", " +
+            answer.answerId + ", " +
+            answer.questionId + " );",
             (err, res) => {
                 if (err) {
                     response.json('Couldn\'t add the answer');
@@ -74,42 +84,41 @@ module.exports = {
         );
     },
 
-    sendCurrentSessionId(userId, response){
+    sendCurrentSessionId(userId, response) {
         client.query("SELECT session_id FROM started_sessions WHERE user_id = '" + userId + "' ORDER BY session_id DESC;",
             (err, res) => {
-                if (err){
+                if (err) {
                     throw err;
                 }
-                if (res.rows){
+                if (res.rows) {
                     res.json(res.rows);
-                }
-                else{
-                    res.json({empty:true});
+                } else {
+                    res.json({empty: true});
                 }
             });
     },
 
-    sendAnswers(questionId, response){
+    sendAnswers(questionId, response) {
         client.query('SELECT * FROM answers WHERE question_id = ' + questionId + ";", (err, res) => {
-            if (err){
+            if (err) {
                 throw err;
             }
             response.json(res.rows);
         });
     },
 
-    sendResultInfo(resultId, response){
+    sendResultInfo(resultId, response) {
         client.query('SELECT * FROM test_results WHERE result_id = ' + resultId + ';', (err, res) => {
-            if (err){
+            if (err) {
                 throw err;
             }
             response.json(res.rows);
         });
     },
 
-    sendQuestions(response){
+    sendQuestions(response) {
         client.query('SELECT * FROM questions;', (err, res) => {
-            if (err){
+            if (err) {
                 throw err;
             }
             response.json(res.rows);
@@ -123,10 +132,9 @@ module.exports = {
                 if (err) {
                     throw err;
                 }
-                if (res.rows.length > 0){
+                if (res.rows.length > 0) {
                     response.json(res.rows);
-                }
-                else{
+                } else {
                     response.json({
                         empty: true
                     })

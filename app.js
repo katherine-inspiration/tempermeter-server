@@ -80,6 +80,10 @@ app.get('/api/session/:session_id/finish', (req, res) => {
   pgClient.finishSession(req.params.session_id, res);
 });
 
+app.get('/api/session/start/:user_id', (req, res) => {
+  pgClient.startSession(req.params.user_id, res);
+});
+
 app.get('/api', (req, res) => {
   res.json({text: "Hello, api!"})
 });
