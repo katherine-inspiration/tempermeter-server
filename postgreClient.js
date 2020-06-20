@@ -69,11 +69,12 @@ module.exports = {
     },
 
     putAnswer(answer, response) {
+        console.log('server got the answer');
         console.log(answer);
-        client.query("INSERT INTO answers_history (session_id, answer_id, question_id) VALUES " +
-            answer.sessionId + ", " +
-            answer.answerId + ", " +
-            answer.questionId + " );",
+        client.query("INSERT INTO answers_history (session_id, answer_id, question_id) VALUES ( " +
+            answer.session_id + ", " +
+            answer.answer_id + ", " +
+            answer.question_id + " );",
             (err, res) => {
                 if (err) {
                     response.json('Couldn\'t add the answer');

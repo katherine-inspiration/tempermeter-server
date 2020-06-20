@@ -4,8 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-const bodyParser = require('body-parser');
-
 
 var pgClient = require('./postgreClient');
 
@@ -14,8 +12,6 @@ const router = express.Router();
 
 const port = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -65,6 +61,7 @@ app.get('/api/images/melanholic', (req, res) => {
 });
 
 app.put('/api/answer', (req, res) => {
+  console.log(req);
   pgClient.putAnswer(req.body, res);
 });
 
