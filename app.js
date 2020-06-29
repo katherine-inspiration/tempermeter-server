@@ -28,6 +28,10 @@ app.get('/api/history/answers/:session_id', (req, res) => {
   pgClient.sendAnswersHistory(req.params.session_id, res);
 });
 
+app.get('/api/history/answers/:session_id/:question_id', (req, res) => {
+  pgClient.sendAnswer(req.params.session_id, req.params.question_id, res);
+});
+
 app.get('/api/questions', (req, res) => {
   pgClient.sendQuestions(res);
 });
