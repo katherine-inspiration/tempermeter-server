@@ -20,6 +20,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
 
 
+
+app.get('/api/answer_ball/:answer_id', (req, res) => {
+  pgClient.sendAnswerBall(req.params.answer_id, res);
+});
+
+app.get('/api/answers/:question_id', (req, res) => {
+  pgClient.sendAnswers(req.params.question_id, res);
+});
+
 app.get('/api/history/results/:user_id', (req, res) => {
   pgClient.sendResultsHistory(req.params.user_id, res);
 });
@@ -30,22 +39,6 @@ app.get('/api/history/answers/:session_id', (req, res) => {
 
 app.get('/api/history/answers/:session_id/:question_id', (req, res) => {
   pgClient.sendAnswer(req.params.session_id, req.params.question_id, res);
-});
-
-app.get('/api/questions', (req, res) => {
-  pgClient.sendQuestions(res);
-});
-
-app.get('/api/answers/:question_id', (req, res) => {
-  pgClient.sendAnswers(req.params.question_id, res);
-});
-
-app.get('/api/result_info/:result_id', (req, res) => {
-  pgClient.sendResultInfo(req.params.result_id, res);
-});
-
-app.get('/api/session/:user_id', (req, res) => {
-  pgClient.sendCurrentSessionId(req.params.user_id, res);
 });
 
 app.get('/api/images/holeric', (req, res) => {
@@ -64,17 +57,20 @@ app.get('/api/images/melanholic', (req, res) => {
   res.sendFile(path.join(__dirname, 'images', 'melanholic.PNG'));
 });
 
-app.put('/api/answer', (req, res) => {
-  console.log(req);
-  pgClient.putAnswer(req.body, res);
+app.get('/api/questions', (req, res) => {
+  pgClient.sendQuestions(res);
 });
 
-app.get('/api/answer_ball/:answer_id', (req, res) => {
-  pgClient.sendAnswerBall(req.params.answer_id, res);
+app.get('/api/result/calculate/:session_id', (req, res) => {
+  pgClient.calculateResult(req.params.session_id, res);
 });
 
-app.put('/api/result', (req, res) => {
-  pgClient.putResult(req.body, res);
+app.get('/api/result_info/:result_id', (req, res) => {
+  pgClient.sendResultInfo(req.params.result_id, res);
+});
+
+app.get('/api/session/:user_id', (req, res) => {
+  pgClient.sendCurrentSessionId(req.params.user_id, res);
 });
 
 app.get('/api/session/:session_id/finish', (req, res) => {
@@ -84,6 +80,18 @@ app.get('/api/session/:session_id/finish', (req, res) => {
 app.get('/api/session/start/:user_id', (req, res) => {
   pgClient.startSession(req.params.user_id, res);
 });
+
+
+app.put('/api/answer', (req, res) => {
+  console.log(req);
+  pgClient.putAnswer(req.body, res);
+});
+
+app.put('/api/result', (req, res) => {
+  pgClient.putResult(req.body, res);
+});
+
+
 
 app.get('/api', (req, res) => {
   res.json({text: "Hello, api!"})
