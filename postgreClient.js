@@ -13,7 +13,7 @@ client.connect();
 
 module.exports = {
 
-    calculateResult(sessionId, response) {
+    calculateResult(userId, sessionId, response) {
         client.query("SELECT answer_id FROM answers_history WHERE session_id = " + sessionId,
             (err, res) => {
                 if (err) {
@@ -28,7 +28,7 @@ module.exports = {
                     }
                 }
                 inRow += ' )';
-                client.query("SELECT answers_id, ball FROM answers WHERE answer_id IN " + inRow,
+                client.query("SELECT answer_id, ball FROM answers WHERE answer_id IN " + inRow,
                     (err, res) => {
                         if (err) {
                             response.json('Couldn\'t get the answers balls');
@@ -62,25 +62,29 @@ module.exports = {
                         for (let i = 1; i < topResultBalls.length; i++) {
                             topResultBallsRow += ", " + topResultBalls[i];
                         }
-                        topResultBallsRow + " )";
-                        client.query("SELECT result_id FROM test_results WHERE " + result_ball + " IN " + topResultBallsRow,
+                        topResultBallsRow += " );";
+                        console.log("Top Results Balls Filter Row");
+                        console.log(topResultBallsRow);
+                        client.query("SELECT result_id FROM test_results WHERE result_ball  IN " + topResultBallsRow,
                             (err, res) => {
                                 if (err) {
                                     response.json("Couldn't get top results ids");
                                     throw err;
                                 }
 
-                                let resultsHistoryRow = " (" + res.rows[0].result_id + ", CURRENT_TIMESTAMP, " + sessionId + " )";
+                                let resultsHistoryRow = " (" + res.rows[0].result_id + ", CURRENT_TIMESTAMP, " + sessionId +
+                                    ", " + userId+ " )";
                                 for (let i = 1; i < res.rows.length; i++) {
                                     resultsHistoryRow += ", (" + res.rows[i].result_id + ", CURRENT_TIMESTAMP, " + sessionId + " )";
                                 }
-                                client.query("INSERT INTO results_history (result_id, date, session_id) VALUES " + resultsHistoryRow +
+                                client.query("INSERT INTO results_history (result_id, date, session_id, user_id) VALUES " + resultsHistoryRow +
                                     "; DELETE FROM started_sessions WHERE session_id = " + sessionId + ";",
                                     (err, res) => {
                                         if (err) {
                                             response.json("Couldn't write the results to the history or couldn't finish the session");
                                             throw err;
                                         }
+                                        response.json("The result is calculated and is written to the database. The session is finished.");
 
                                     }
                                 );

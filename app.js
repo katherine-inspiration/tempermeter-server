@@ -61,8 +61,8 @@ app.get('/api/questions', (req, res) => {
   pgClient.sendQuestions(res);
 });
 
-app.get('/api/result/calculate/:session_id', (req, res) => {
-  pgClient.calculateResult(req.params.session_id, res);
+app.get('/api/result/calculate/:user_id/:session_id', (req, res) => {
+  pgClient.calculateResult(req.params.user_id, req.params.session_id, res);
 });
 
 app.get('/api/result_info/:result_id', (req, res) => {
