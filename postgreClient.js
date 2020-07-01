@@ -34,6 +34,8 @@ module.exports = {
                             response.json('Couldn\'t get the answers balls');
                             throw err;
                         }
+                        console.log("selected answers with balls");
+                        console.log(res.rows);
                         let balls = [
                             {ball: 1, count: 0},
                             {ball: 2, count: 0},
@@ -44,16 +46,20 @@ module.exports = {
                             balls[answer.ball - 1].count += 1;
                         }
                         balls.sort((a, b) => {
-                            return a.count - b.count
+                            return b.count - a.count
                         });
+                        console.log("Answers and balls after sorting");
+                        console.log(balls);
                         let topResults = [balls[0]];
                         for (let i = 1; i < balls.length; i++) {
-                            if (balls[i].count === topResults.count) {
+                            if (balls[i].count === topResults[0].count) {
                                 topResults.push(balls[i]);
                             } else {
                                 break;
                             }
                         }
+                        console.log("Top results");
+                        console.log(topResults);
                         let topResultBalls = [];
                         for (let result of topResults) {
                             topResultBalls.push(result.ball);
@@ -73,9 +79,10 @@ module.exports = {
                                 }
 
                                 let resultsHistoryRow = " (" + res.rows[0].result_id + ", CURRENT_TIMESTAMP, " + sessionId +
-                                    ", " + userId+ " )";
+                                    ", " + userId + " )";
                                 for (let i = 1; i < res.rows.length; i++) {
-                                    resultsHistoryRow += ", (" + res.rows[i].result_id + ", CURRENT_TIMESTAMP, " + sessionId + " )";
+                                    resultsHistoryRow += ", (" + res.rows[i].result_id + ", CURRENT_TIMESTAMP, " + sessionId +
+                                        ", " + userId + " )";
                                 }
                                 client.query("INSERT INTO results_history (result_id, date, session_id, user_id) VALUES " + resultsHistoryRow +
                                     "; DELETE FROM started_sessions WHERE session_id = " + sessionId + ";",

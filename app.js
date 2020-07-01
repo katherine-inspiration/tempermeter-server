@@ -83,7 +83,6 @@ app.get('/api/session/start/:user_id', (req, res) => {
 
 
 app.put('/api/answer', (req, res) => {
-  console.log(req);
   pgClient.putAnswer(req.body, res);
 });
 
