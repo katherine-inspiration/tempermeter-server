@@ -65,10 +65,6 @@ app.get('/api/result/calculate/:user_id/:session_id', (req, res) => {
   pgClient.calculateResult(req.params.user_id, req.params.session_id, res);
 });
 
-app.get('/api/result_info/:result_id', (req, res) => {
-  pgClient.sendResultInfo(req.params.result_id, res);
-});
-
 app.get('/api/session/:user_id', (req, res) => {
   pgClient.sendCurrentSessionId(req.params.user_id, res);
 });
@@ -79,6 +75,14 @@ app.get('/api/session/:session_id/finish', (req, res) => {
 
 app.get('/api/session/start/:user_id', (req, res) => {
   pgClient.startSession(req.params.user_id, res);
+});
+
+app.get('/api/sessions/:user_id', (req, res) => {
+  pgClient.sendFinishedSessions(req.params.user_id, res);
+});
+
+app.get('/api/result/:session_id', (req, res) => {
+  //pgClient.
 });
 
 

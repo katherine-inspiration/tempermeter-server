@@ -6,12 +6,45 @@ const client = new Client({
     ssl: {
         rejectUnauthorized: false
     }
-});
+})
+
+
 
 
 client.connect();
 
 module.exports = {
+
+    sendFinishedSessions(userId, response) {
+        client.query("SELECT results_history.session_id, results_history.date, test_results.result_name " +
+            "FROM results_history, test_results" +
+            " WHERE results_history.user_id = '" + userId + "' AND results_history.result_id = test_results.result_id" +
+            " ORDER BY results_history.date DESC;",
+            (err, sessions) => {
+                if (err) {
+                    response.json("Couldn't get sessions history for current user");
+                    throw err;
+                }
+                console.log(sessions.rows);
+                let responseArray = [];
+                for (let session of sessions.rows){
+                    if (responseArray.find(s => s.session_id === session.session_id)){
+                        console.log(responseArray.find(s => s.session_id === session.session_id));
+                        responseArray.find(s => s.session_id === session.session_id).result.push(session.result_name);
+                    }
+                    else{
+                        responseArray.push({
+                            session_id: session.session_id,
+                            result: [session.result_name],
+                            date: session.date
+                        });
+                    }
+                    console.log(responseArray);
+                }
+                response.json(responseArray);
+
+            });
+    },
 
     calculateResult(userId, sessionId, response) {
         client.query("SELECT answer_id FROM answers_history WHERE session_id = " + sessionId,
@@ -234,14 +267,6 @@ module.exports = {
         );
     },
 
-    sendResultInfo(resultId, response) {
-        client.query('SELECT * FROM test_results WHERE result_id = ' + resultId + ';', (err, res) => {
-            if (err) {
-                throw err;
-            }
-            response.json(res.rows);
-        });
-    },
 
     sendQuestions(response) {
         client.query('SELECT * FROM questions;', (err, res) => {
