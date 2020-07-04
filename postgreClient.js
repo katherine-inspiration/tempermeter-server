@@ -9,11 +9,25 @@ const client = new Client({
 })
 
 
-
-
 client.connect();
 
 module.exports = {
+
+    sendResultData(sessionId, response) {
+        client.query("SELECT results.result_name as name, results.result_id as id, " +
+            "results.result_text as text, results.result_picture as picture " +
+            "FROM test_results as results, results_history as history " +
+            "WHERE history.session_id = " + sessionId + " AND history.result_id = results.result_id;",
+            (err, resultData) => {
+                if (err) {
+                    response.json("Couldn't get result data from database");
+                    throw err;
+                }
+                console.log("Sending data");
+                console.log(resultData.rows);
+                response.json(resultData.rows);
+            });
+    },
 
     sendFinishedSessions(userId, response) {
         client.query("SELECT results_history.session_id, results_history.date, test_results.result_name " +
@@ -27,12 +41,11 @@ module.exports = {
                 }
                 console.log(sessions.rows);
                 let responseArray = [];
-                for (let session of sessions.rows){
-                    if (responseArray.find(s => s.session_id === session.session_id)){
+                for (let session of sessions.rows) {
+                    if (responseArray.find(s => s.session_id === session.session_id)) {
                         console.log(responseArray.find(s => s.session_id === session.session_id));
                         responseArray.find(s => s.session_id === session.session_id).result.push(session.result_name);
-                    }
-                    else{
+                    } else {
                         responseArray.push({
                             session_id: session.session_id,
                             result: [session.result_name],
@@ -267,7 +280,6 @@ module.exports = {
         );
     },
 
-
     sendQuestions(response) {
         client.query('SELECT * FROM questions;', (err, res) => {
             if (err) {
@@ -309,4 +321,4 @@ module.exports = {
                 }
             });
     }
-}
+};

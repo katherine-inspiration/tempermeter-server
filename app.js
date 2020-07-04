@@ -82,7 +82,8 @@ app.get('/api/sessions/:user_id', (req, res) => {
 });
 
 app.get('/api/result/:session_id', (req, res) => {
-  //pgClient.
+  console.log("Sending a result of the session " + req.params.session_id);
+  pgClient.sendResultData(req.params.session_id, res);
 });
 
 
