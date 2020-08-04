@@ -1,11 +1,23 @@
+var permissionStatus = "SET STATUS";
+var sig;
+var currentUserId;
+var feedPostingObject = {};
 var rParams = FAPI.Util.getRequestParameters();
 FAPI.init(rParams["api_server"], rParams["apiconnection"],
-    () => {
-        console.log("The OK API is initialized");
-        alert("The OK API is initialized");
+
+    function() {
+        alert("OK API is initialized");
     },
-    () => {
-        console.log("Couldn't initialize OK API");
-        alert("Couldn't initialize OK API");
+    /*
+    * Второй параметр:
+    * функция, которая будет вызвана, если инициализация не удалась.
+    */
+    function(error) {
+        processError(error);
     }
 );
+
+function processError(e) {
+    console.log(e);
+    alert("Couldn't initialize OK API");
+}

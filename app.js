@@ -13,11 +13,22 @@ const router = express.Router();
 const port = process.env.PORT || 3000;
 
 
+var ok = require('ok.ru');
+let requestOptions = {
+  applicationSecretKey: process.env.OK_APPLICATION_SECRET_KEY,
+  applicationKey: process.env.OK_APPLICATION_KEY,
+  applicationId: process.env.OK_APPLICATION_ID,
+  accessToken: process.env.OK_ACCESS_TOKEN
+};
+ok.setOptions(requestOptions);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
+
+
 
 
 
