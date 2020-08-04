@@ -21,13 +21,6 @@ let requestOptions = {
     accessToken: process.env.OK_ACCESS_TOKEN
 };
 ok.setOptions(requestOptions);
-new ok.api('get', {method: 'users.isAppUser'}, (err, data, response) => {
-    //some actions with data
-    alert("Alarm! Error! #{err}");
-    if (err)
-        //It can transport all response and headers
-        console.log(response)
-});
 
 app.use(logger('dev'));
 app.use(express.json());
